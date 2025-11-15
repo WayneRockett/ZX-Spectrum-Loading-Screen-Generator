@@ -1,0 +1,58 @@
+name: 📚 Documentation
+description: Report an issue with documentation or suggest improvements (PRINT "Help needed!")
+title: "[DOCS]: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 PRINT "DOCUMENTATION REQUIRED"
+        Help us improve the docs! Every bit helps, from fixing typos to adding examples.
+        
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation issue is this?
+      options:
+        - Missing documentation
+        - Incorrect documentation
+        - Outdated documentation
+        - Typo or grammar
+        - Unclear or confusing
+        - Needs examples
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Documentation Location
+      description: Where is the documentation issue located?
+      placeholder: e.g., README.md, line 42, or https://...
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: What's the issue?
+      description: Describe what's wrong or missing with the current documentation
+      placeholder: The documentation says X but it should say Y...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: How should the documentation be improved?
+      placeholder: I suggest we update it to...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the documentation issue here.
+      placeholder: Any other relevant information...
