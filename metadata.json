@@ -1,0 +1,5 @@
+{
+  "name": "ZX Spectrum Loading Screen Generator",
+  "description": "Generate ZX Spectrum–style loading screens from user text prompts. The app uses Gemini to refine prompts and Imagen to generate images, which are then processed to match the classic 15-color Speccy palette and aesthetic.",
+  "requestFramePermissions": []
+}
