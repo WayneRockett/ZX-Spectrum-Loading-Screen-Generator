@@ -1,0 +1,56 @@
+name: ❓ Question
+description: Ask a question about the project (INPUT "Your question here")
+title: "[QUESTION]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ❓ INPUT "YOUR QUESTION"
+        Got a question? Fire away! No question is too simple - we all started somewhere.
+        
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What area does your question relate to?
+      options:
+        - Setup and Installation
+        - Usage and Features
+        - API and Integration
+        - Troubleshooting
+        - Best Practices
+        - Contributing
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: How do I...? / Why does...? / What is...?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide any relevant context that might help us answer your question
+      placeholder: I'm trying to... / I've already tried... / I noticed that...
+
+  - type: textarea
+    id: research
+    attributes:
+      label: What have you tried?
+      description: Have you checked the README, searched existing issues, or tried anything else?
+      placeholder: I've looked at... / I tried searching for...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other information that might be helpful?
+      placeholder: Screenshots, code snippets, error messages...

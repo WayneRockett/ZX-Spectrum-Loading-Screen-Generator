@@ -1,0 +1,78 @@
+name: 🔗 External Task
+description: Track an external task or dependency (GOSUB external reference)
+title: "[EXTERNAL]: "
+labels: ["external"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔗 GOSUB EXTERNAL TASK
+        Track work that depends on external factors, third-party services, or other repositories.
+        
+  - type: textarea
+    id: description
+    attributes:
+      label: Task Description
+      description: Describe the external task or dependency
+      placeholder: We need to wait for... / This depends on... / We're tracking...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: External Task Type
+      description: What type of external task is this?
+      options:
+        - Third-party API or Service
+        - Upstream dependency
+        - Related repository or project
+        - External approval or decision
+        - Infrastructure or deployment
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: reference
+    attributes:
+      label: External Reference
+      description: Link to the external issue, PR, service, or resource
+      placeholder: e.g., https://github.com/owner/repo/issues/123 or API documentation URL
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Current Status
+      description: What's the current status of this external task?
+      options:
+        - Waiting - Not started
+        - In Progress - Being worked on
+        - Blocked - Waiting on something
+        - Review - Under review
+        - Completed - Finished externally
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on Project
+      description: How does this external task affect our project?
+      placeholder: This blocks... / This is needed for... / Once this is done, we can...
+    validations:
+      required: true
+
+  - type: textarea
+    id: action
+    attributes:
+      label: Action Required
+      description: What action, if any, is needed from our side?
+      placeholder: We need to... / Follow up on... / Monitor...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information about this external task
+      placeholder: Related issues, deadlines, contacts...
