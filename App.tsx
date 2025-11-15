@@ -160,6 +160,30 @@ const App: React.FC = () => {
                                 loadingStep={loadingStep}
                                 error={error}
                             />
+                             <div className="mt-4 flex flex-col sm:flex-row gap-2 justify-center">
+                                <a
+                                    href="https://feedback.waynerockett.com/zx-spectrum"
+                                    className="flex-1 text-center bg-[#00D700] text-black py-2 px-3 text-xs hover:bg-[#00FF00] transition-colors duration-200"
+                                >
+                                    FEEDBACK
+                                </a>
+                                <a
+                                    href="https://buymeacoffee.com/countdisoq"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 text-center bg-[#D7D700] text-black py-2 px-3 text-xs hover:bg-[#FFFF00] transition-colors duration-200"
+                                >
+                                    BUY ME A COFFEE
+                                </a>
+                                <a
+                                    href="https://github.com/WayneRockett/ZX-Spectrum-Loading-Screen-Generator"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 text-center bg-[#00D7D7] text-black py-2 px-3 text-xs hover:bg-[#00FFFF] transition-colors duration-200"
+                                >
+                                    SOURCE CODE
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </main>
