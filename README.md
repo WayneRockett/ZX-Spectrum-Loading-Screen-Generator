@@ -7,7 +7,7 @@
 ┃  10 REM *** ZX SPECTRUM LOADING SCREEN GENERATOR ***   ┃
 ┃  20 REM *** POWERED BY GOOGLE GEMINI AI ***            ┃
 ┃  30 PRINT "PROGRAM: NOSTALGIA.BAS"                     ┃
-┃  40 LOAD "" CODE                                        ┃
+┃  40 LOAD ""                                            ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 ```
 
@@ -26,7 +26,7 @@ The answer, obviously, was a **ZX Spectrum Loading Screen Generator**.
 1. **You type a prompt** - Describe the loading screen of your dreams
 2. **Gemini rewrites it** - Making it more... *speccy* (that's a technical term)
 3. **Imagen generates the image** - Using Google's image generation wizardry
-4. **Magic quantization happens** - We crush those millions of colors down to the authentic 15-color ZX Spectrum palette
+4. **Magic quantisation happens** - We crush those millions of colours down to the authentic 15-colour ZX Spectrum palette
 5. **LOAD "" COMPLETE** - Your glorious 256×192 masterpiece appears!
 
 It's like waiting for a tape to load, but instead of hearing "EEEeeeEEEeeee" for 5 minutes, you get instant gratification. The future is now, folks!
@@ -36,11 +36,11 @@ It's like waiting for a tape to load, but instead of hearing "EEEeeeEEEeeee" for
 For you youngsters who never experienced the glory days: the ZX Spectrum had 15 colors (8 standard + 7 BRIGHT variants, plus BLACK appearing twice). This wasn't a limitation - it was a FEATURE. Those constraints bred creativity! Artists became magicians, working within the iconic 8×8 attribute grid.
 
 This app faithfully recreates that aesthetic because:
-- **Color clash is a feature, not a bug**
+- **Colour clash is a feature, not a bug**
 - **256×192 pixels is all you need**
 - **If it's not flickering slightly, is it even retro?**
 
-## 🚀 Getting Started (LOAD "" CODE)
+## 🚀 Getting Started (LOAD "")
 
 ### Prerequisites (Thankfully Easier Than Finding a Working Tape Deck)
 
@@ -106,7 +106,7 @@ Built with all the fancy modern tools Sir Clive would have loved to have:
 - **Vite** - Lightning-fast builds
 - **Google Gemini AI** - For prompt enhancement
 - **Google Imagen** - For image generation
-- **Tailwind CSS** - For styling (with authentic Spectrum colors)
+- **Tailwind CSS** - For styling (with authentic Spectrum colours)
 - **Canvas API** - For color quantization magic
 
 ## 📖 Project Structure
@@ -136,8 +136,8 @@ Found a bug? Want to add a feature? PRs are welcome!
 ## 🐛 Known Quirks (It's Not a Bug, It's Authentic)
 
 - Daily generation limit is 3 images (to keep API costs reasonable)
-- Color quantization is intentionally aggressive (it's the Spectrum way!)
-- Some modern images don't translate perfectly to 15 colors (that's the charm)
+- Colour quantisation is intentionally aggressive (it's the Spectrum way!)
+- Some modern images don't translate perfectly to 15 colours (that's the charm)
 
 ## 📜 License
 
