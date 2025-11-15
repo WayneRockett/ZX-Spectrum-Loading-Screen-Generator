@@ -1,0 +1,103 @@
+Please create a full web application that generates ZX Spectrum–style loading screens from user text prompts. The app should be built in React + TypeScript, and should use both Gemini and Imagen.
+
+App requirements:
+🎨 Image Generation (Imagen)
+
+The user enters a text description.
+
+Gemini rewrites the description into a style appropriate for classic ZX Spectrum loading screens (e.g., 1980s UK home computer game art).
+
+Imagen generates an image using only the ZX Spectrum 15-colour palette:
+
+ZX Spectrum palette:
+
+Black (#000000)
+
+Blue (#0000D7)
+
+Red (#D70000)
+
+Magenta (#D700D7)
+
+Green (#00D700)
+
+Cyan (#00D7D7)
+
+Yellow (#D7D700)
+
+White (#FFFFFF)
+(and their BRIGHT variants)
+
+Bright Blue (#0000FF)
+
+Bright Red (#FF0000)
+
+Bright Magenta (#FF00FF)
+
+Bright Green (#00FF00)
+
+Bright Cyan (#00FFFF)
+
+Bright Yellow (#FFFF00)
+
+Bright White (#FFFFFF)
+
+The app should include post-processing logic so that any generated image is quantised down to the exact ZX Spectrum palette (no gradients or colours outside this list).
+
+🖥️ Output style
+
+The final image should mimic a Spectrum loading screen:
+
+Chunky pixel aesthetic
+
+Slight RGB bleed optional
+
+Optional horizontal loading-stripe effect at the bottom
+
+Resolution around 256 × 192 scaled up cleanly for display
+
+No modern digital shading or anti-aliasing
+
+🧠 Gemini usage
+
+Use Gemini to:
+
+Rewrite prompts into ZX Spectrum visual-description style
+
+Ensure the generation prompt always mentions the 15-colour palette
+
+Optionally emulate 80s UK game themes (e.g., Ultimate Play the Game, Ocean, Imagine, Mikro-Gen)
+
+💾 App behaviour
+
+The app should include:
+
+A text box for the user’s description
+
+A “Generate Loading Screen” button
+
+A preview of the generated ZX Spectrum image
+
+A “Download image” button
+
+A simple, retro-styled UI (80s micro feel)
+
+🔒 API & security
+
+Use the Gemini and Imagen APIs correctly
+
+Keep API keys secure on the backend
+
+Do not expose any credentials in client code
+
+📦 Deployable
+
+The application should be fully deployable via Google Cloud Run using the "Deploy" option in AI Studio.
+
+If possible, please also generate a small set of example Speccy prompts like:
+
+“Knight exploring a haunted forest”
+
+“Starfighter escaping an alien base”
+
+“Footballer celebrating a last-minute cup winner”
