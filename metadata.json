@@ -1,5 +1,10 @@
 {
   "name": "ZX Spectrum Loading Screen Generator",
-  "description": "Generate ZX Spectrum–style loading screens from user text prompts. The app uses Gemini to refine prompts and Imagen to generate images, which are then processed to match the classic 15-color Speccy palette and aesthetic.",
+  "version": "1.0.0",
+  "description": "Generate ZX Spectrum–style loading screens from user text prompts. The app uses Gemini to refine prompts and Imagen to generate images, which are then processed to match the classic 15-color Speccy palette and aesthetic. Relive the nostalgia of 1980s 8-bit computing with authentic 256×192 pixel art.",
+  "author": "Wayne Rockett",
+  "keywords": ["ZX Spectrum", "retro gaming", "8-bit art", "AI art generator", "pixel art", "vintage computer", "loading screen", "nostalgia"],
+  "homepage": "https://zx-spectrum-generator.waynerockett.com/",
+  "repository": "https://github.com/WayneRockett/ZX-Spectrum-Loading-Screen-Generator",
   "requestFramePermissions": []
 }
