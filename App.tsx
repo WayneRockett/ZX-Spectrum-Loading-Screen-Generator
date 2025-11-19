@@ -3,7 +3,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Header } from './components/Header';
 import { PromptForm } from './components/PromptForm';
 import { ImageDisplay } from './components/ImageDisplay';
-import { rewritePrompt, generateImage } from './services/generationService';
+import { MaintenanceScreen } from './components/MaintenanceScreen';
+import { rewritePrompt, generateImage, QuotaExceededError } from './services/generationService';
 import { quantizeImage } from './utils/imageProcessor';
 import { EXAMPLE_PROMPTS } from './constants';
 
@@ -32,6 +33,7 @@ const App: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [displayPrompts, setDisplayPrompts] = useState<string[]>([]);
     const [generationsLeft, setGenerationsLeft] = useState<number>(DAILY_LIMIT);
+    const [isMaintenanceMode, setIsMaintenanceMode] = useState<boolean>(false);
 
     const isLimitReached = generationsLeft <= 0;
 
@@ -110,7 +112,12 @@ const App: React.FC = () => {
 
         } catch (err) {
             console.error(err);
-            setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+            // Check if it's a QuotaExceededError
+            if (err instanceof QuotaExceededError) {
+                setIsMaintenanceMode(true);
+            } else {
+                setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+            }
         } finally {
             setIsLoading(false);
             setLoadingStep('');
@@ -120,6 +127,16 @@ const App: React.FC = () => {
     const handleExampleClick = (example: string) => {
         setPrompt(example);
     };
+
+    const handleRetry = () => {
+        setIsMaintenanceMode(false);
+        setError(null);
+    };
+
+    // Show maintenance screen if API quota is exceeded
+    if (isMaintenanceMode) {
+        return <MaintenanceScreen onRetry={handleRetry} />;
+    }
 
     return (
         <div className="min-h-screen bg-black flex flex-col items-center p-4 sm:p-6 md:p-8">
