@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { PromptForm } from './components/PromptForm';
 import { ImageDisplay } from './components/ImageDisplay';
 import { MaintenanceScreen } from './components/MaintenanceScreen';
+import { ImageToScr } from './components/ImageToScr';
 import { rewritePrompt, generateImage, QuotaExceededError } from './services/generationService';
 import { quantizeImage } from './utils/imageProcessor';
 import { EXAMPLE_PROMPTS } from './constants';
@@ -34,6 +35,7 @@ const App: React.FC = () => {
     const [displayPrompts, setDisplayPrompts] = useState<string[]>([]);
     const [generationsLeft, setGenerationsLeft] = useState<number>(DAILY_LIMIT);
     const [isMaintenanceMode, setIsMaintenanceMode] = useState<boolean>(false);
+    const [showConverter, setShowConverter] = useState<boolean>(false);
 
     const isLimitReached = generationsLeft <= 0;
 
@@ -138,6 +140,11 @@ const App: React.FC = () => {
         return <MaintenanceScreen onRetry={handleRetry} />;
     }
 
+    // Show converter screen
+    if (showConverter) {
+        return <ImageToScr onBack={() => setShowConverter(false)} />;
+    }
+
     return (
         <div className="min-h-screen bg-black flex flex-col items-center p-4 sm:p-6 md:p-8">
             <div className="w-full max-w-4xl">
@@ -200,6 +207,14 @@ const App: React.FC = () => {
                                 >
                                     SOURCE CODE
                                 </a>
+                            </div>
+                            <div className="mt-2 flex justify-center">
+                                <button
+                                    onClick={() => setShowConverter(true)}
+                                    className="w-full bg-[#D700D7] text-white py-2 px-3 text-xs hover:bg-[#FF00FF] transition-colors duration-200"
+                                >
+                                    CONVERT IMAGE TO .SCR
+                                </button>
                             </div>
                         </div>
                     </div>
