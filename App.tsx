@@ -6,6 +6,7 @@ import { PromptForm } from './components/PromptForm';
 import { ImageDisplay } from './components/ImageDisplay';
 import { MaintenanceScreen } from './components/MaintenanceScreen';
 import { ImageToScr } from './components/ImageToScr';
+import { AnnouncementPopup } from './components/AnnouncementPopup';
 import { rewritePrompt, generateImage, QuotaExceededError } from './services/generationService';
 import { quantizeImage } from './utils/imageProcessor';
 import { EXAMPLE_PROMPTS } from './constants';
@@ -37,6 +38,7 @@ const App: React.FC = () => {
     const [generationsLeft, setGenerationsLeft] = useState<number>(DAILY_LIMIT);
     const [isMaintenanceMode, setIsMaintenanceMode] = useState<boolean>(false);
     const [showConverter, setShowConverter] = useState<boolean>(false);
+    const [showPopup, setShowPopup] = useState<boolean>(true);
 
     const isLimitReached = generationsLeft <= 0;
 
@@ -148,6 +150,7 @@ const App: React.FC = () => {
 
     return (
         <>
+            {showPopup && <AnnouncementPopup onClose={() => setShowPopup(false)} />}
             <div className="min-h-screen bg-black flex flex-col items-center p-4 sm:p-6 md:p-8">
                 <div className="w-full max-w-4xl">
                     <Header />

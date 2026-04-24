@@ -32,10 +32,10 @@ export const PromptForm: React.FC<PromptFormProps> = ({ prompt, setPrompt, onGen
             />
             <button
                 onClick={onGenerate}
-                disabled={isLoading || isLimitReached}
-                className="w-full bg-[#D70000] text-white py-3 text-lg hover:bg-[#FF0000] disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors duration-200"
+                disabled={true}
+                className="w-full bg-[#D70000] text-white py-3 text-lg disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors duration-200"
             >
-                {isLimitReached ? 'DAILY LIMIT REACHED' : isLoading ? 'LOADING...' : 'GENERATE SCREEN'}
+                GENERATION TEMPORARILY DISABLED
             </button>
         </div>
     );
