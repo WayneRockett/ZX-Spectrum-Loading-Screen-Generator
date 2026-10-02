@@ -81,11 +81,27 @@ function secondsUntilTomorrow(): number {
 }
 
 async function redisCommand<T>(command: Array<string | number>): Promise<T> {
-    const redisUrl = process.env.UPSTASH_REDIS_REST_URL?.replace(/\/$/, '');
-    const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+    const redisUrl = (
+        process.env.UPSTASH_REDIS_REST_URL
+        || process.env.KV_REST_API_URL
+    )?.replace(/\/$/, '');
+    const redisToken = (
+        process.env.UPSTASH_REDIS_REST_TOKEN
+        || process.env.KV_REST_API_TOKEN
+    );
 
     if (!redisUrl || !redisToken) {
-        throw new Error('Rate limiting is not configured.');
+        const availableNames = [
+            'UPSTASH_REDIS_REST_URL',
+            'UPSTASH_REDIS_REST_TOKEN',
+            'KV_REST_API_URL',
+            'KV_REST_API_TOKEN',
+        ].filter((name) => Boolean(process.env[name]));
+        throw new Error(
+            `Rate limiting is not configured. Available credential variables: ${
+                availableNames.length > 0 ? availableNames.join(', ') : 'none'
+            }.`,
+        );
     }
 
     const response = await fetch(redisUrl, {
