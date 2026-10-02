@@ -103,6 +103,9 @@ The frontend and `api/generate.ts` can remain in the same Vercel project.
    - `REPLICATE_API_TOKEN`
    - `UPSTASH_REDIS_REST_URL`
    - `UPSTASH_REDIS_REST_TOKEN`
+   
+   Vercel may instead create the legacy aliases `KV_REST_API_URL` and
+   `KV_REST_API_TOKEN`; the application supports either complete pair.
    - `PER_IP_DAILY_LIMIT` (optional, default `3`)
    - `GLOBAL_DAILY_LIMIT` (optional, default `100`)
    - `GENERATION_COOLDOWN_SECONDS` (optional, default `20`)
