@@ -6,27 +6,22 @@ import { PromptForm } from './components/PromptForm';
 import { ImageDisplay } from './components/ImageDisplay';
 import { MaintenanceScreen } from './components/MaintenanceScreen';
 import { ImageToScr } from './components/ImageToScr';
-import { AnnouncementPopup } from './components/AnnouncementPopup';
-import { rewritePrompt, generateImage, QuotaExceededError } from './services/generationService';
+import {
+    generateImage,
+    GenerationLimitError,
+    getGenerationStatus,
+    QuotaExceededError,
+} from './services/generationService';
 import { quantizeImage } from './utils/imageProcessor';
 import { EXAMPLE_PROMPTS } from './constants';
 
-const USAGE_STORAGE_KEY = 'zxSpectrumGeneratorUsage';
 const DAILY_LIMIT = 3;
-
-interface UsageData {
-    count: number;
-    date: string; // YYYY-MM-DD
-}
 
 // Helper to get N random prompts from the main list
 const getRandomPrompts = (allPrompts: string[], count: number): string[] => {
     const shuffled = [...allPrompts].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 };
-
-const getTodayDateString = () => new Date().toISOString().split('T')[0];
-
 
 const App: React.FC = () => {
     const [prompt, setPrompt] = useState<string>('');
@@ -38,37 +33,14 @@ const App: React.FC = () => {
     const [generationsLeft, setGenerationsLeft] = useState<number>(DAILY_LIMIT);
     const [isMaintenanceMode, setIsMaintenanceMode] = useState<boolean>(false);
     const [showConverter, setShowConverter] = useState<boolean>(false);
-    const [showPopup, setShowPopup] = useState<boolean>(true);
 
     const isLimitReached = generationsLeft <= 0;
 
     useEffect(() => {
-        // Check usage on initial load
-        const storedUsage = localStorage.getItem(USAGE_STORAGE_KEY);
-        const today = getTodayDateString();
-        
-        if (storedUsage) {
-            try {
-                const usageData: UsageData = JSON.parse(storedUsage);
-                if (usageData.date === today) {
-                    setGenerationsLeft(Math.max(0, DAILY_LIMIT - usageData.count));
-                } else {
-                    // It's a new day, reset
-                    localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify({ count: 0, date: today }));
-                    setGenerationsLeft(DAILY_LIMIT);
-                }
-            } catch (e) {
-                // Corrupted data, reset
-                localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify({ count: 0, date: today }));
-                setGenerationsLeft(DAILY_LIMIT);
-            }
-        } else {
-            // No usage data found, initialize for the day
-             localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify({ count: 0, date: today }));
-             setGenerationsLeft(DAILY_LIMIT);
-        }
-
         setDisplayPrompts(getRandomPrompts(EXAMPLE_PROMPTS, 5));
+        getGenerationStatus()
+            .then(setGenerationsLeft)
+            .catch((statusError) => console.error('Unable to load generation allowance:', statusError));
     }, []);
 
 
@@ -88,37 +60,20 @@ const App: React.FC = () => {
         setGeneratedImage(null);
 
         try {
-            setLoadingStep('REWRITING PROMPT...');
-            const rewrittenPrompt = await rewritePrompt(prompt);
-            console.log('Rewritten Prompt:', rewrittenPrompt);
-
             setLoadingStep('GENERATING IMAGE...');
-            const base64Image = await generateImage(rewrittenPrompt);
-            const imageDataUrl = `data:image/png;base64,${base64Image}`;
+            const result = await generateImage(prompt);
+            const imageDataUrl = `data:${result.mimeType};base64,${result.base64}`;
 
             setLoadingStep('QUANTIZING COLOURS...');
             const quantizedImage = await quantizeImage(imageDataUrl);
             setGeneratedImage(quantizedImage);
-
-            // On success, update usage
-            const today = getTodayDateString();
-            const storedUsage = localStorage.getItem(USAGE_STORAGE_KEY);
-            let currentCount = 0;
-            if (storedUsage) {
-                const usageData: UsageData = JSON.parse(storedUsage);
-                if (usageData.date === today) {
-                    currentCount = usageData.count;
-                }
-            }
-            const newCount = currentCount + 1;
-            localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify({ count: newCount, date: today }));
-            setGenerationsLeft(DAILY_LIMIT - newCount);
-
-
+            setGenerationsLeft(result.remaining);
         } catch (err) {
             console.error(err);
-            // Check if it's a QuotaExceededError
-            if (err instanceof QuotaExceededError) {
+            if (err instanceof GenerationLimitError) {
+                setGenerationsLeft(err.remaining);
+                setError(err.message);
+            } else if (err instanceof QuotaExceededError) {
                 setIsMaintenanceMode(true);
             } else {
                 setError(err instanceof Error ? err.message : 'An unknown error occurred.');
@@ -150,7 +105,6 @@ const App: React.FC = () => {
 
     return (
         <>
-            {showPopup && <AnnouncementPopup onClose={() => setShowPopup(false)} />}
             <div className="min-h-screen bg-black flex flex-col items-center p-4 sm:p-6 md:p-8">
                 <div className="w-full max-w-4xl">
                     <Header />

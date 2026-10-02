@@ -26,16 +26,17 @@ export const PromptForm: React.FC<PromptFormProps> = ({ prompt, setPrompt, onGen
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="e.g. A robot holding a red skateboard"
+                maxLength={500}
                 disabled={isLoading || isLimitReached}
                 rows={4}
                 className="bg-[#0000D7] border-2 border-[#D7D7D7] text-white p-2 text-sm focus:outline-none focus:border-[#D7D700] resize-none placeholder:text-gray-400 disabled:opacity-50"
             />
             <button
                 onClick={onGenerate}
-                disabled={true}
+                disabled={isLoading || isLimitReached || !prompt.trim()}
                 className="w-full bg-[#D70000] text-white py-3 text-lg disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors duration-200"
             >
-                GENERATION TEMPORARILY DISABLED
+                {isLoading ? 'GENERATING...' : 'GENERATE LOADING SCREEN'}
             </button>
         </div>
     );

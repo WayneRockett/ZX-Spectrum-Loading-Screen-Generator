@@ -20,13 +20,13 @@ export const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ onRetry })
                         <div className="border-2 border-[#00D7D7] p-6 mb-6">
                             <pre className="text-[#00D7D7] text-left text-xs sm:text-sm whitespace-pre-wrap font-mono">
 {`10 REM *** SYSTEM STATUS ***
-20 PRINT "API QUOTA EXCEEDED"
+20 PRINT "IMAGE SERVICE OFFLINE"
 30 PRINT ""
-40 PRINT "DAILY GENERATION LIMIT"
-50 PRINT "HAS BEEN REACHED"
+40 PRINT "GENERATION IS TEMPORARILY"
+50 PRINT "UNAVAILABLE"
 60 PRINT ""
-70 PRINT "SERVICE WILL RESUME"
-80 PRINT "TOMORROW AT 00:00 UTC"
+70 PRINT "CHECK THE CONNECTION"
+80 PRINT "AND TRY AGAIN LATER"
 90 PRINT ""
 100 PRINT "SORRY FOR THE"
 110 PRINT "INCONVENIENCE..."
