@@ -5,7 +5,7 @@
 ```
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃  10 REM *** ZX SPECTRUM LOADING SCREEN GENERATOR ***   ┃
-┃  20 REM *** POWERED BY GOOGLE GEMINI AI ***            ┃
+┃  20 REM *** POWERED BY FLUX.1 SCHNELL ***              ┃
 ┃  30 PRINT "PROGRAM: NOSTALGIA.BAS"                     ┃
 ┃  40 LOAD ""                                            ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
@@ -24,8 +24,8 @@ The answer, obviously, was a **ZX Spectrum Loading Screen Generator**.
 ### 🤖 How It Works (No Assembly Required)
 
 1. **You type a prompt** - Describe the loading screen of your dreams
-2. **Gemini rewrites it** - Making it more... *speccy* (that's a technical term)
-3. **Imagen generates the image** - Using Google's image generation wizardry
+2. **The server adds the Speccy styling** - The browser never receives the model API token
+3. **FLUX.1 Schnell generates the image** - Using Replicate's hosted API
 4. **Magic quantisation happens** - We crush those millions of colours down to the authentic 15-colour ZX Spectrum palette
 5. **LOAD "" COMPLETE** - Your glorious 256×192 masterpiece appears!
 
@@ -45,7 +45,9 @@ This app faithfully recreates that aesthetic because:
 ### Prerequisites (Thankfully Easier Than Finding a Working Tape Deck)
 
 - **Node.js** - Any modern version will do (we're not *that* retro)
-- **A Gemini API Key** - Get one from [Google AI Studio](https://aistudio.google.com/)
+- **A Replicate API token** - Create one in your [Replicate account](https://replicate.com/account/api-tokens)
+- **An Upstash Redis database** - Used for server-side generation limits
+- **Vercel CLI** - Required to run the API route locally (`npm install --global vercel`)
 
 ### Installation (No Soldering Required)
 
@@ -57,16 +59,26 @@ cd ZX-Spectrum-Loading-Screen-Generator
 # 2. Install dependencies (GOSUB package-manager)
 npm install
 
-# 3. Set up your API key (POKE into .env.local)
+# 3. Set up the server-only environment variables (POKE into .env.local)
 # Create a .env.local file and add:
-# GEMINI_API_KEY=your_api_key_here
+# REPLICATE_API_TOKEN=your_replicate_token
+# UPSTASH_REDIS_REST_URL=your_upstash_rest_url
+# UPSTASH_REDIS_REST_TOKEN=your_upstash_rest_token
+#
+# Optional limits (defaults shown):
+# PER_IP_DAILY_LIMIT=3
+# GLOBAL_DAILY_LIMIT=100
+# GENERATION_COOLDOWN_SECONDS=20
 
 # 4. Start the dev server (LOAD "" and press PLAY)
-npm run dev
+npm run dev:vercel
 
-# 5. Open your browser to http://localhost:5173
+# 5. Open the URL printed by Vercel CLI (normally http://localhost:3000)
 # BEEP! BEEP! Success!
 ```
+
+`npm run dev` still starts the Vite frontend by itself, but image generation needs
+`npm run dev:vercel` so the `/api/generate` serverless function is available.
 
 ### Building for Production (Ready for the Microdrive™)
 
@@ -77,11 +89,38 @@ npm run preview
 
 Your compiled app will be in the `dist` directory, ready for deployment to whatever cloud service you fancy. (Sorry, no actual microdrive support.)
 
+### Deploying to Vercel
+
+The live deployment is [zxspectrum.waynerockett.com](https://zxspectrum.waynerockett.com/).
+The frontend and `api/generate.ts` can remain in the same Vercel project.
+
+1. Create a [Replicate API token](https://replicate.com/account/api-tokens), buy a small
+   amount of prepaid credit, and leave **auto reload disabled**.
+2. Create an Upstash Redis database. You can do this through the Vercel Marketplace or
+   directly in Upstash.
+3. Add these variables in **Vercel → Project → Settings → Environment Variables** for
+   Production, Preview, and Development as appropriate:
+   - `REPLICATE_API_TOKEN`
+   - `UPSTASH_REDIS_REST_URL`
+   - `UPSTASH_REDIS_REST_TOKEN`
+   - `PER_IP_DAILY_LIMIT` (optional, default `3`)
+   - `GLOBAL_DAILY_LIMIT` (optional, default `100`)
+   - `GENERATION_COOLDOWN_SECONDS` (optional, default `20`)
+4. Remove the old `GEMINI_API_KEY` from Vercel and redeploy. Vercel should continue to
+   detect the project as Vite; no framework or build-command override is required.
+
+Every accepted generation attempt counts towards both daily limits, including attempts
+where the image provider later fails. This fail-closed behaviour ensures the global
+limit is a real upper bound on calls to the paid API. With FLUX.1 Schnell currently
+priced at about $0.003 per image, the default global limit represents roughly $0.30 of
+model usage per day. Replicate's prepaid balance, with auto reload disabled, provides
+the final account-level spending stop.
+
 ## 🎪 Features (More Than 48K Could Handle)
 
-- ✨ **AI-Powered Prompt Enhancement** - Gemini makes your prompts more authentic
+- ✨ **AI-Powered Image Generation** - FLUX.1 Schnell creates the source artwork
 - 🎨 **Authentic Color Quantization** - Proper 15-color Spectrum palette
-- 💾 **Daily Generation Limits** - Because even in the future, we respect rate limits (3 per day to keep costs sensible)
+- 💾 **Server-Enforced Limits** - Per-IP, cooldown, and global daily limits keep costs sensible
 - 📱 **Responsive Design** - Works on devices Sir Clive never dreamed of
 - 🔊 **Silent Loading** - No tape loading sounds (add them yourself if you're feeling nostalgic)
 - 🖼️ **Instant Results** - 2 seconds instead of 2 minutes (or 20 if you had a dodgy tape head)
@@ -104,8 +143,9 @@ Built with all the fancy modern tools Sir Clive would have loved to have:
 - **React 19** - For that sweet reactive UI
 - **TypeScript** - Type safety (unlike BASIC line numbers)
 - **Vite** - Lightning-fast builds
-- **Google Gemini AI** - For prompt enhancement
-- **Google Imagen** - For image generation
+- **Replicate / FLUX.1 Schnell** - For low-cost image generation
+- **Vercel Functions** - Keeps provider credentials on the server
+- **Upstash Redis** - Enforces atomic usage limits across serverless instances
 - **Tailwind CSS** - For styling (with authentic Spectrum colours)
 - **Canvas API** - For color quantization magic
 
@@ -114,7 +154,8 @@ Built with all the fancy modern tools Sir Clive would have loved to have:
 ```
 ZX-Spectrum-Loading-Screen-Generator/
 ├── components/          # React components (Header, PromptForm, etc.)
-├── services/           # API services for Gemini and Imagen
+├── api/                # Server-side image generation endpoint
+├── services/           # Browser-safe API client
 ├── utils/              # Image processing utilities
 ├── constants.ts        # Example prompts and configuration
 ├── App.tsx             # Main application component
@@ -136,6 +177,7 @@ Found a bug? Want to add a feature? PRs are welcome!
 ## 🐛 Known Quirks (It's Not a Bug, It's Authentic)
 
 - Daily generation limit is 3 images (to keep API costs reasonable)
+- A site-wide daily limit defaults to 100 generation attempts
 - Colour quantisation is intentionally aggressive (it's the Spectrum way!)
 - Some modern images don't translate perfectly to 15 colours (that's the charm)
 
@@ -146,15 +188,15 @@ This project is open source. Share it, modify it, learn from it! Just like we al
 ## 🙏 Acknowledgments
 
 - **DEV.to** - For the awesome Education Track program
-- **Google AI Team** - For Gemini and Imagen APIs
+- **Black Forest Labs** - For FLUX.1 Schnell
+- **Replicate** - For hosting the image model
 - **Sir Clive Sinclair** - For the ZX Spectrum (RIP, you absolute legend)
 - **All the bedroom coders of the 1980s** - You inspired this
 
 ## 🔗 Links
 
-- **Live Demo**: [Try it yourself](https://zx-spectrum-generator.waynerockett.com) *(if deployed)*
+- **Live Demo**: [Try it yourself](https://zxspectrum.waynerockett.com/)
 - **DEV.to Education Track**: [Original announcement](https://dev.to/devteam/announcing-the-first-dev-education-track-build-apps-with-google-ai-studio-ej7?bb=238626)
-- **AI Studio**: [View in Google AI Studio](https://ai.studio/apps/drive/15QGyQvI5wVQtkSybetZgfh6nmE-OH3Or)
 - **Feedback**: [Share your thoughts](https://feedback.waynerockett.com/zx-spectrum)
 - **Buy Me a Coffee**: [Support the project](https://buymeacoffee.com/countdisoq)
 
