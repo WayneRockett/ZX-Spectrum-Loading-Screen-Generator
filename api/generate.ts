@@ -1,3 +1,5 @@
+import { redisCommand } from '../server/redis.js';
+import { trackGeneration } from '../server/usage.js';
 import { createHash } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
@@ -36,6 +38,9 @@ type ApiResponse = ServerResponse & {
 };
 
 type ReplicatePrediction = {
+    id: string;
+    metrics?: { predict_time?: number };
+
     status: 'starting' | 'processing' | 'succeeded' | 'failed' | 'canceled';
     output?: string[];
     error?: string;
@@ -78,51 +83,6 @@ function secondsUntilTomorrow(): number {
     const now = new Date();
     const tomorrow = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
     return Math.ceil((tomorrow - now.getTime()) / 1000) + 60;
-}
-
-async function redisCommand<T>(command: Array<string | number>): Promise<T> {
-    const redisUrl = (
-        process.env.UPSTASH_REDIS_REST_URL
-        || process.env.KV_REST_API_URL
-    )?.replace(/\/$/, '');
-    const redisToken = (
-        process.env.UPSTASH_REDIS_REST_TOKEN
-        || process.env.KV_REST_API_TOKEN
-    );
-
-    if (!redisUrl || !redisToken) {
-        const availableNames = [
-            'UPSTASH_REDIS_REST_URL',
-            'UPSTASH_REDIS_REST_TOKEN',
-            'KV_REST_API_URL',
-            'KV_REST_API_TOKEN',
-        ].filter((name) => Boolean(process.env[name]));
-        throw new Error(
-            `Rate limiting is not configured. Available credential variables: ${
-                availableNames.length > 0 ? availableNames.join(', ') : 'none'
-            }.`,
-        );
-    }
-
-    const response = await fetch(redisUrl, {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${redisToken}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(command),
-    });
-
-    if (!response.ok) {
-        throw new Error(`Rate limit store returned ${response.status}.`);
-    }
-
-    const payload = await response.json() as { result?: T; error?: string };
-    if (payload.error || payload.result === undefined) {
-        throw new Error(payload.error || 'Rate limit store returned an invalid response.');
-    }
-
-    return payload.result;
 }
 
 async function getRemaining(request: ApiRequest): Promise<number> {
@@ -258,6 +218,9 @@ async function waitForPrediction(prediction: ReplicatePrediction): Promise<Repli
 
 async function generateImage(prompt: string): Promise<{ base64: string; mimeType: string }> {
     const prediction = await waitForPrediction(await createPrediction(prompt));
+    if (['succeeded', 'failed', 'canceled'].includes(prediction.status)) {
+        await trackGeneration(prediction);
+    }
     const outputUrl = prediction.output?.[0];
 
     if (prediction.status !== 'succeeded' || !outputUrl) {
