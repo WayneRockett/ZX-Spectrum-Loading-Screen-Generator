@@ -175,6 +175,16 @@ const App: React.FC = () => {
                                         CONVERT IMAGE TO .SCR
                                     </button>
                                 </div>
+                                <div className="mt-2 flex justify-center">
+                                    <a
+                                        href="https://northern-sea.bugbusters.games/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full text-center bg-[#00D7D7] text-black py-2 px-3 text-xs hover:bg-[#00FFFF] transition-colors duration-200"
+                                    >
+                                        PLAY VIKING RAIDERS REMAKE
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </main>
